@@ -777,10 +777,17 @@ const ARTIFACTS = [
   { prefix: "route-history/", kind: "periodic", maxAgeH: 36, what: "the daily rank moat" },
   { prefix: "vitals/", kind: "periodic", maxAgeH: 72, what: "the Vital Signs panel" },
   { prefix: "contributors/", kind: "periodic", maxAgeH: 12, what: "the contributor census (cohorts source)" },
-  { prefix: "traffic/", kind: "periodic", maxAgeH: 12, what: "the Traffic Vault" },
+  // traffic/ removed 2026-08-26: GitHub's Traffic API only answers for repos
+  // the calling token can push to. The tenant (santifer/career-ops) isn't
+  // ours, so this family is structurally unfillable, not stale - it was
+  // never going to populate for any token we could hold. Re-add if the
+  // tenant ever becomes a repo we own, or a token with access is available.
   { prefix: "health/", kind: "periodic", maxAgeH: 6, what: "this watchdog's own output" },
   { prefix: "live/", kind: "periodic", maxAgeH: 12, what: "live star polling" },
-  { prefix: "badges-earned.json", kind: "periodic", maxAgeH: 36, what: "earned badges" },
+  // badges-earned.json removed 2026-08-26: no producer for this key exists
+  // anywhere in the repo (grepped collector/*.mjs and every workflow). This
+  // was a declared-but-never-built feature, not a stopped one. Re-add once
+  // a producer actually writes this key.
   // Declared so they are WATCHED, not so they are shown: nothing reads these
   // keys but the owner. Declaring them also keeps `inventory.undeclared` from
   // naming the `private/` family in the watchdog's PUBLIC issue. If one goes
