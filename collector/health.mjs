@@ -426,7 +426,7 @@ async function checkContracts() {
     const repoRest = await gh(`/repos/${TENANT}`);
     now.restRepo = repoRest.status;
 
-    const own = await gh(`/repos/santifer/warpchart/stargazers?per_page=1`, { accept: "application/vnd.github.star+json" });
+    const own = await gh(`/repos/${process.env.GITHUB_REPOSITORY ?? "santifer/warpchart"}/stargazers?per_page=1`, { accept: "application/vnd.github.star+json" });
     now.stargazersOwn = own.status;
 
     const foreign = await gh(`/repos/facebook/react/stargazers?per_page=1`, { accept: "application/vnd.github.star+json" });
@@ -480,7 +480,7 @@ async function checkContracts() {
     const forbidden = now.stargazersOwn === 403 || now.stargazersOwn === 401;
     fail("contract.collector-token", "CONTRACT", forbidden ? "critical" : "warn",
       `cannot list our own stargazers with the ${identity} token (${now.stargazersOwn})`,
-      "The collector uses this same cascade, so its incremental backwalk is failing too and the tenant's daily star series is frozen even though every other number keeps updating. Fix: add a user-scoped STARGAZER_TOKEN secret with public repo read access (gh secret set STARGAZER_TOKEN -R santifer/warpchart). Confirm with: gh run view <collect run id> --log | grep backwalk",
+      `The collector uses this same cascade, so its incremental backwalk is failing too and the tenant's daily star series is frozen even though every other number keeps updating. Fix: add a user-scoped STARGAZER_TOKEN secret with public repo read access (gh secret set STARGAZER_TOKEN -R ${process.env.GITHUB_REPOSITORY ?? "santifer/warpchart"}). Confirm with: gh run view <collect run id> --log | grep backwalk`,
       { probe: now.stargazersOwn, identity });
   });
 
